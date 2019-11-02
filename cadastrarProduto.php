@@ -1,14 +1,22 @@
 <?php 
 include_once('variaveis.php');
 
+
 function cadastraProduto($nome, $categoria, $descricao, $quantidade, $preco, $imagem){
     $listaProdutos = "produtos.json";
+
     if(file_exists($listaProdutos)){
 
         $arquivo = file_get_contents($listaProdutos);
         $produtos = json_decode($arquivo, true);
         
-        $produtos[] = ["nome"=>$nome, "categoria"=>$categoria, "descricao"=>$descricao, "quantidade"=>$quantidade, "preco"=>$preco, "imagem"=>$imagem];
+        //para dar id automático com json, foi atribuído o id número 1 caso a lista de produtos ainda estiver vazia. se não estiver, o id do próximo produto cadastrado deve ser o id anterior + 1
+        //a resolver: mensagem de erro ao cadastrar o primeiro produto, porque a função end espera que já exista uma array
+        $ultimoProduto = end($produtos);
+        $ultimoProdutoID = $ultimoProduto['id'];
+
+
+        $produtos[] = ["id"=>++$ultimoProdutoID,"nome"=>$nome, "categoria"=>$categoria, "descricao"=>$descricao, "quantidade"=>$quantidade, "preco"=>$preco, "imagem"=>$imagem];
         $json = json_encode($produtos);
 
         $deuCerto = file_put_contents($listaProdutos, $json);
@@ -21,7 +29,7 @@ function cadastraProduto($nome, $categoria, $descricao, $quantidade, $preco, $im
     } else {
         $produtos = [];
  
-        $produtos[] = ["nome"=>$nome, "categoria"=>$categoria, "descricao"=>$descricao, "quantidade"=>$quantidade, "preco"=>$preco, "imagem"=>$imagem];
+        $produtos[] = ["id"=>1, "nome"=>$nome, "categoria"=>$categoria, "descricao"=>$descricao, "quantidade"=>$quantidade, "preco"=>$preco, "imagem"=>$imagem];
         $json = json_encode($produtos);
 
         $deuCerto = file_put_contents($listaProdutos, $json);
@@ -76,7 +84,7 @@ if($_POST) {
                 <?php foreach($produtos as $produto) { ?>
                         <tbody>
                             <tr>
-                            <td><?php echo $produto['nome']; ?></td>
+                            <td><a href="paginaProduto.php"><?php echo $produto['nome']; ?></a></td>
                             <td><?php echo $produto['categoria']; ?></td>
                             <td><?php echo $produto['preco']; ?></td>
                             </tr>
