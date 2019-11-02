@@ -1,6 +1,10 @@
 <?php 
-include_once('variaveis.php');
 
+    include('variaveis.php');
+
+    if (!isset($_SESSION)) { 
+       session_start();
+    };
 
 function cadastraProduto($nome, $categoria, $descricao, $quantidade, $preco, $imagem){
     $listaProdutos = "produtos.json";
@@ -11,7 +15,7 @@ function cadastraProduto($nome, $categoria, $descricao, $quantidade, $preco, $im
         $produtos = json_decode($arquivo, true);
         
         //para dar id automático com json, foi atribuído o id número 1 caso a lista de produtos ainda estiver vazia. se não estiver, o id do próximo produto cadastrado deve ser o id anterior + 1
-        //a resolver: mensagem de erro ao cadastrar o primeiro produto, porque a função end espera que já exista uma array
+        //a resolver: mensagem de erro ao cadastrar o primeiro produto, porque a função end espera que já exista uma array 
         $ultimoProduto = end($produtos);
         $ultimoProdutoID = $ultimoProduto['id'];
 
@@ -81,15 +85,16 @@ if($_POST) {
                     <th scope="col">Preço</th>
                     </tr>
                 </thead>
-                <?php foreach($produtos as $produto) { ?>
-                        <tbody>
-                            <tr>
-                            <td><a href="paginaProduto.php"><?php echo $produto['nome']; ?></a></td>
-                            <td><?php echo $produto['categoria']; ?></td>
-                            <td><?php echo $produto['preco']; ?></td>
-                            </tr>
-                        </tbody>
-                <?php } ?>
+                <?php if($produtos != []) {
+                    foreach($produtos as $produto) { ?>
+                            <tbody>
+                                <tr>
+                                <td><a href="paginaProduto.php?id=<?php echo $produto['id'] ?>"><?php echo $produto['nome']; ?></a></td>
+                                <td><?php echo $produto['categoria']; ?></td>
+                                <td><?php echo $produto['preco']; ?></td>
+                                </tr>
+                            </tbody>
+                        <?php } } ?>
                 </table>
             </section>
  
