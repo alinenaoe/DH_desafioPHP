@@ -41,6 +41,10 @@ if($_POST) {
     $deucerto = move_uploaded_file($localTmp, $caminhoSalvo);
 
     echo cadastraProduto($_POST['nome'],$_POST['categoria'], $_POST['descricao'], $_POST['quantidade'],$_POST['preco'], $caminhoSalvo);
+
+    // foreach($produtos as $produto) {
+    //     file_put_contents($nomeProduto,('paginaProduto.php'));
+    // }
 }
 
 
@@ -54,6 +58,7 @@ if($_POST) {
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Produtos da loja</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container mt-5">
@@ -80,7 +85,7 @@ if($_POST) {
                 </table>
             </section>
  
-            <section class="col-5 bg-light p-5">
+            <section class="col-5 bg-light p-5 mb-5">
                 <form action="" method="POST" enctype="multipart/form-data"> 
                     <h3>Cadastrar produto</h3>
                     <br>
@@ -113,7 +118,7 @@ if($_POST) {
 
                     <div class="form-group font-weight-bold">
                     <label for="preco">Preço</label>
-                    <input type="number" class="form-control" name="preco">
+                    <input type="number" class="form-control" name="preco" step="0.01" placeholder="0.00">
                     </div>
 
                     <div class="form-group font-weight-bold">
