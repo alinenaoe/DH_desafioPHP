@@ -1,12 +1,15 @@
 <?php 
 
     include('variaveis.php');
+    // $listaProdutos = "produtos.json";
+    // $produtos = json_decode(file_get_contents($listaProdutos), true);
 
     if (!isset($_SESSION)) { 
        session_start();
     };
 
-function cadastraProduto($nome, $categoria, $descricao, $quantidade, $preco, $imagem){
+
+function cadastrarProduto($nome, $categoria, $descricao, $quantidade, $preco, $imagem){
     $listaProdutos = "produtos.json";
 
     if(file_exists($listaProdutos)){
@@ -25,6 +28,7 @@ function cadastraProduto($nome, $categoria, $descricao, $quantidade, $preco, $im
 
         $deuCerto = file_put_contents($listaProdutos, $json);
         if($deuCerto){
+            header('Location: cadastrarProduto.php');
             return "Produto cadastrado com sucesso!";
         } else {
             return "Seu produto não foi cadastrado";
@@ -52,13 +56,8 @@ if($_POST) {
     $caminhoSalvo = 'img/'.$nomeImg;
     $deucerto = move_uploaded_file($localTmp, $caminhoSalvo);
 
-    echo cadastraProduto($_POST['nome'],$_POST['categoria'], $_POST['descricao'], $_POST['quantidade'],$_POST['preco'], $caminhoSalvo);
-
-    // foreach($produtos as $produto) {
-    //     file_put_contents($nomeProduto,('paginaProduto.php'));
-    // }
+    echo cadastrarProduto($_POST['nome'],$_POST['categoria'], $_POST['descricao'], $_POST['quantidade'],$_POST['preco'], $caminhoSalvo);
 }
-
 
 ?>
 
@@ -136,7 +135,7 @@ if($_POST) {
 
                     <div class="form-group font-weight-bold">
                     <label for="imagem">Foto do produto</label>
-                    <input type="file" class="form-control-file" name="imagem">
+                    <input type="file" class="form-control-file" name="imagem" required accept="image/*">
                     </div>
                    
                     <div class="form-group d-flex justify-content-end">
