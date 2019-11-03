@@ -65,6 +65,7 @@
 
                <div class="row mt-5">
                     <a href="editarProduto.php?id=<?php echo $id ?>"><button class="btn btn-outline-secondary ml-3">Editar informações do produto</button></a>
+                    <!-- seria interessante ter uma mensagem de alerta antes de excluir! -->
                     <button class="btn btn-outline-danger ml-3">Excluir produto da loja</button>
                 </div>
 

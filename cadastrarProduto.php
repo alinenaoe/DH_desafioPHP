@@ -8,6 +8,8 @@
        session_start();
     };
 
+    $categorias = ["Boné", "Botton", "Camiseta", "Caneca"];
+
 
 function cadastrarProduto($nome, $categoria, $descricao, $quantidade, $preco, $imagem){
     $listaProdutos = "produtos.json";
@@ -22,19 +24,27 @@ function cadastrarProduto($nome, $categoria, $descricao, $quantidade, $preco, $i
         $ultimoProduto = end($produtos);
         $ultimoProdutoID = $ultimoProduto['id'];
 
-
         $produtos[] = ["id"=>++$ultimoProdutoID,"nome"=>$nome, "categoria"=>$categoria, "descricao"=>$descricao, "quantidade"=>$quantidade, "preco"=>$preco, "imagem"=>$imagem];
         $json = json_encode($produtos);
 
         $deuCerto = file_put_contents($listaProdutos, $json);
         if($deuCerto){
+            //para que não precise atualizar a página para poder ver o novo produto na lista
             header('Location: cadastrarProduto.php');
+            //não está retornando! só retorna sem o location 
             return "Produto cadastrado com sucesso!";
         } else {
-            return "Seu produto não foi cadastrado";
+            return "Seu produto não foi cadastrado. Tente novamente!";
         } 
 
+        foreach($categorias as $categoriaProduto) {
+            if ($categoria != $categoriaProduto) {
+                $categorias[] = $categoria;
+            }
+        }
+
     } else {
+
         $produtos = [];
  
         $produtos[] = ["id"=>1, "nome"=>$nome, "categoria"=>$categoria, "descricao"=>$descricao, "quantidade"=>$quantidade, "preco"=>$preco, "imagem"=>$imagem];
@@ -42,15 +52,24 @@ function cadastrarProduto($nome, $categoria, $descricao, $quantidade, $preco, $i
 
         $deuCerto = file_put_contents($listaProdutos, $json);
         if($deuCerto){
+            header('Location: cadastrarProduto.php');
             return "Produto cadastrado com sucesso!";
         } else {
-            return "Seu produto não foi cadastrado";
+            return "Seu produto não foi cadastrado. Tente novamente!";
         } 
+
+        //categoria dinâmica - se o usuário cadastra um produto dentro de uma nova categoria, ela passa a ser uma opção no próximo cadastro
+        foreach($categorias as $categoriaProduto) {
+            if ($categoria != $categoriaProduto) {
+                $categorias[] = $categoria;
+            }
+        }
     }
 
 }
 
 if($_POST) {
+
     $nomeImg = $_FILES['imagem']['name'];
     $localTmp = $_FILES['imagem']['tmp_name'];
     $caminhoSalvo = 'img/'.$nomeImg;
@@ -93,7 +112,10 @@ if($_POST) {
                                 <td><?php echo $produto['preco']; ?></td>
                                 </tr>
                             </tbody>
-                        <?php } } ?>
+                        <?php } 
+                        } else { ?>
+                            <td colspan="3">Ainda não há produtos cadastrados :(</td>
+                        <?php } ?>
                 </table>
             </section>
  
@@ -108,15 +130,19 @@ if($_POST) {
                     </div>
 
                     <div class="form-group font-weight-bold">
-                        <label for="categoria">Categoria</label>
-                        <select class="form-control" name="categoria" required>
-                            <option value="">Selecione a categoria do produto</option>
-                            <option>Camiseta</option>
-                            <option>Caneca</option>
-                            <option>Boné</option>
-                            <option>Botton</option>
-                        </select>
+                        <label for="categoria" class="mb-0">Categoria</label><br>
+                        <small class="text-muted">Selecione entre as opções ou escreva uma nova categoria</small>
+                        <!-- aparentemente só dá para deixar um valor pré-selecionado com datalist usando javascript -->
+                        <input list="categorias" class="form-control" name="categoria">
+                        <datalist id="categorias" name="categoria" required>
+                            <?php foreach($categorias as $categoria) {?>
+                            <option value="<?php echo $categoria?>"></option>
+                            <?php } ?>
+                        </datalist>
+
                     </div>
+                
+
 
                     <div class="form-group font-weight-bold">
                     <label for="descricao">Descrição</label>

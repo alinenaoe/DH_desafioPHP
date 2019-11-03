@@ -14,39 +14,12 @@
 
     foreach($produtos as $produto) {
         if ($id == $produto['id']) {
-            $_GET['nome'] = $produto['nome'];
-            $_GET['categoria'] = $produto['categoria'];
-            $_GET['descricao'] = $produto['descricao'];
-            $_GET['quantidade'] = $produto['quantidade'];
-            $_GET['preco'] = $produto['preco'];
-            $_GET['imagem'] = $produto['imagem'];
+            foreach ($produto as $chave=>$valor) {
+                $_GET[$chave] = $produto[$chave];
+            }
         }
-    };
+    }
 
-    // var_dump($_POST);
-
-
-    // function atualizarProduto ($nome, $categoria, $descricao, $quantidade, $preco) {
-    //     $listaProdutos = "produtos.json";
-    //     $produtos = json_decode(file_get_contents($listaProdutos), true);
-
-    //     foreach ($produtos as $produto) {
-    //     $produtos[$produto['id']] = ["nome"=>$nome, "categoria"=>$categoria, "descricao"=>$descricao, "quantidade"=>$quantidade, "preco"=>$preco];
-    //     }
-    //     $json = json_encode($produtos);
-    // }
-
-    // if($_POST) {
-    //     // $nomeImg = $_FILES['imagem']['name'];
-    //     // $localTmp = $_FILES['imagem']['tmp_name'];
-    //     // $caminhoSalvo = 'img/'.$nomeImg;
-    //     // $deucerto = move_uploaded_file($localTmp, $caminhoSalvo);
-    
-    //     echo atualizarProduto($_POST['nome'],$_POST['categoria'], $_POST['descricao'], $_POST['quantidade'],$_POST['preco']);//, $caminhoSalvo);
-    
-    // }
-
- 
 ?>
 
 <!DOCTYPE html>
@@ -63,15 +36,16 @@
 <body>
     <div class="container mt-5 bg-light p-5">
         <a href="cadastrarProduto.php" class="btn btn-light btn-produto"> &larr; Voltar para lista de produtos</a></body>
+        <form action="editarProduto.php?id=<?php echo $_GET['id']?>" method="POST" enctype="multipart/form-data"> 
+
         <div class="row mt-4">
-        
             <div class="col-4">
             <img src="<?php echo $_GET['imagem']?>">
-            <input type="file" class="form-control-file" name="imagem">
+            <input type="file" class="form-control-file mt-3" name="imagem" value="<?php echo $_GET['imagem']?>">
             </div>
 
             <div class="col-8">
-            <form action="editarProduto.php?id=<?php echo $_GET['id']?>" method="POST" enctype="multipart/form-data"> 
+
 
                 <p>Nome do produto</p>
                 <input type="text" name="nome" value=<?php echo $_GET['nome'] ?> class="form-control">
@@ -115,7 +89,7 @@
 
                 <div class="row mt-5">
                     <button type="submit" class="btn btn-outline-info ml-3">Salvar</button></a>
-                    <a href="paginaProduto.php?id=<?php echo $produto['id'] ?>" class="btn btn-outline-secondary ml-3">Cancelar</a>
+                    <a href="paginaProduto.php?id=<?php echo $id ?>" class="btn btn-outline-secondary ml-3">Cancelar</a>
                 </div>
 
             </div>
