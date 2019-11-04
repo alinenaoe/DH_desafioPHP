@@ -1,82 +1,24 @@
 <?php 
 
-    include('variaveis.php');
-    // $listaProdutos = "produtos.json";
-    // $produtos = json_decode(file_get_contents($listaProdutos), true);
+    include_once('variaveis.php');
+    include_once('funcoes.php');
 
     if (!isset($_SESSION)) { 
        session_start();
     };
 
-    $categorias = ["Boné", "Botton", "Camiseta", "Caneca"];
+    $_SESSION['categorias'] = ["Boné", "Botton", "Camiseta", "Caneca"];
 
+    if($_POST) {
 
-function cadastrarProduto($nome, $categoria, $descricao, $quantidade, $preco, $imagem){
-    $listaProdutos = "produtos.json";
+        $nomeImg = $_FILES['imagem']['name'];
+        $localTmp = $_FILES['imagem']['tmp_name'];
+        $caminhoSalvo = 'img/'.$nomeImg;
+        $deucerto = move_uploaded_file($localTmp, $caminhoSalvo);
 
-    if(file_exists($listaProdutos)){
-
-        $arquivo = file_get_contents($listaProdutos);
-        $produtos = json_decode($arquivo, true);
-        
-        //para dar id automático com json, foi atribuído o id número 1 caso a lista de produtos ainda estiver vazia. se não estiver, o id do próximo produto cadastrado deve ser o id anterior + 1
-        //a resolver: mensagem de erro ao cadastrar o primeiro produto, porque a função end espera que já exista uma array 
-        $ultimoProduto = end($produtos);
-        $ultimoProdutoID = $ultimoProduto['id'];
-
-        $produtos[] = ["id"=>++$ultimoProdutoID,"nome"=>$nome, "categoria"=>$categoria, "descricao"=>$descricao, "quantidade"=>$quantidade, "preco"=>$preco, "imagem"=>$imagem];
-        $json = json_encode($produtos);
-
-        $deuCerto = file_put_contents($listaProdutos, $json);
-        if($deuCerto){
-            //para que não precise atualizar a página para poder ver o novo produto na lista
-            header('Location: cadastrarProduto.php');
-            //não está retornando! só retorna sem o location 
-            return "Produto cadastrado com sucesso!";
-        } else {
-            return "Seu produto não foi cadastrado. Tente novamente!";
-        } 
-
-        foreach($categorias as $categoriaProduto) {
-            if ($categoria != $categoriaProduto) {
-                $categorias[] = $categoria;
-            }
-        }
-
-    } else {
-
-        $produtos = [];
- 
-        $produtos[] = ["id"=>1, "nome"=>$nome, "categoria"=>$categoria, "descricao"=>$descricao, "quantidade"=>$quantidade, "preco"=>$preco, "imagem"=>$imagem];
-        $json = json_encode($produtos);
-
-        $deuCerto = file_put_contents($listaProdutos, $json);
-        if($deuCerto){
-            header('Location: cadastrarProduto.php');
-            return "Produto cadastrado com sucesso!";
-        } else {
-            return "Seu produto não foi cadastrado. Tente novamente!";
-        } 
-
-        //categoria dinâmica - se o usuário cadastra um produto dentro de uma nova categoria, ela passa a ser uma opção no próximo cadastro
-        foreach($categorias as $categoriaProduto) {
-            if ($categoria != $categoriaProduto) {
-                $categorias[] = $categoria;
-            }
-        }
+        echo cadastrarProduto($_POST['nome'],$_POST['categoria'], $_POST['descricao'], $_POST['quantidade'],$_POST['preco'], $caminhoSalvo);
     }
 
-}
-
-if($_POST) {
-
-    $nomeImg = $_FILES['imagem']['name'];
-    $localTmp = $_FILES['imagem']['tmp_name'];
-    $caminhoSalvo = 'img/'.$nomeImg;
-    $deucerto = move_uploaded_file($localTmp, $caminhoSalvo);
-
-    echo cadastrarProduto($_POST['nome'],$_POST['categoria'], $_POST['descricao'], $_POST['quantidade'],$_POST['preco'], $caminhoSalvo);
-}
 
 ?>
 
@@ -103,11 +45,11 @@ if($_POST) {
                     <th scope="col">Preço</th>
                     </tr>
                 </thead>
-                <?php if($produtos != []) {
-                    foreach($produtos as $produto) { ?>
+                <?php if(isset($_SESSION['produtos'])) {
+                    foreach($_SESSION['produtos'] as $chave=>$produto) { ?>
                             <tbody>
                                 <tr>
-                                <td><a href="paginaProduto.php?id=<?php echo $produto['id'] ?>"><?php echo $produto['nome']; ?></a></td>
+                                <td><a href="paginaProduto.php?id=<?php echo $chave ?>"><?php echo $produto['nome']; ?></a></td>
                                 <td><?php echo $produto['categoria']; ?></td>
                                 <td><?php echo $produto['preco']; ?></td>
                                 </tr>
@@ -134,8 +76,8 @@ if($_POST) {
                         <small class="text-muted">Selecione entre as opções ou escreva uma nova categoria</small>
                         <!-- aparentemente só dá para deixar um valor pré-selecionado com datalist usando javascript -->
                         <input list="categorias" class="form-control" name="categoria">
-                        <datalist id="categorias" name="categoria" required>
-                            <?php foreach($categorias as $categoria) {?>
+                        <datalist id="categorias" name="categorias" required>
+                            <?php foreach($_SESSION['categorias'] as $categoria) {?>
                             <option value="<?php echo $categoria?>"></option>
                             <?php } ?>
                         </datalist>

@@ -1,19 +1,13 @@
 <?php
 
-    include('variaveis.php');
-    //para lembrar o que tem no arquivo de variáveis:
-    // $listaProdutos = "produtos.json";
-    // $produtos = json_decode(file_get_contents($listaProdutos), true);
-
     if (!isset($_SESSION)) { 
         session_start();
     };
-    //dúvida: preciso encerrar a sessão?
 
     $id = $_GET['id'];
 
-    foreach($produtos as $produto) {
-        if ($id == $produto['id']) {
+    foreach($_SESSION['produtos'] as $chave=>$produto) {
+        if ($id == $chave) {
             foreach ($produto as $chave=>$valor) {
                 $_GET[$chave] = $produto[$chave];
             }
@@ -35,7 +29,7 @@
 
 <body>
     <div class="container mt-5 bg-light p-5">
-        <a href="cadastrarProduto.php" class="btn btn-light btn-produto"> &larr; Voltar para lista de produtos</a></body>
+        <a href="index.php" class="btn btn-light btn-produto"> &larr; Voltar para lista de produtos</a></body>
         <form action="editarProduto.php?id=<?php echo $_GET['id']?>" method="POST" enctype="multipart/form-data"> 
 
         <div class="row mt-4">

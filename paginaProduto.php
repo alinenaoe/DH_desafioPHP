@@ -9,8 +9,8 @@
 
     $id = $_GET['id'];
 
-    foreach($produtos as $produto) {
-        if ($id == $produto['id']) {
+    foreach($_SESSION['produtos'] as $chave=>$produto) {
+        if ($id == $chave) {
             $_GET['nome'] = $produto['nome'];
             $_GET['categoria'] = $produto['categoria'];
             $_GET['descricao'] = $produto['descricao'];
@@ -34,7 +34,7 @@
 
 <body>
     <div class="container mt-5 bg-light p-5">
-        <a href="cadastrarProduto.php" class="btn btn-light btn-produto"> &larr; Voltar para lista de produtos</a></body>
+        <a href="index.php" class="btn btn-light btn-produto"> &larr; Voltar para lista de produtos</a></body>
         <div class="row mt-4">
         
             <div class="col-4">
@@ -66,7 +66,11 @@
                <div class="row mt-5">
                     <a href="editarProduto.php?id=<?php echo $id ?>"><button class="btn btn-outline-secondary ml-3">Editar informações do produto</button></a>
                     <!-- seria interessante ter uma mensagem de alerta antes de excluir! -->
-                    <button class="btn btn-outline-danger ml-3">Excluir produto da loja</button>
+
+                    <form action="excluirProduto.php?id=<?php echo $id?>" method="POST"> 
+                        <button type="submit" class="btn btn-outline-danger ml-3">Excluir produto da loja</button>
+                    </form>
+
                 </div>
 
             </div>
