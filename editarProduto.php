@@ -15,21 +15,29 @@
         }
     }
 
+
     //se for enviada alguma informação nova pelo formulário que não seja a imagem:
     if ($_POST) {
         $id = $_GET['id'];
         $infosProduto = $_POST;
     
             foreach($_SESSION['produtos'][$id] as $chave=>$valor) {
-                    if($chave != "imagem") {
-                        if ($valor != $infosProduto[$chave]) {
-                            $_SESSION['produtos'][$id][$chave] = $infosProduto[$chave];
+                if($chave != "imagem") {
+                    foreach($infosProduto as $chave=>$valorPost) {
+                        if($valor !== $valorPost) {
+                            $valor = $valorPost;
                         }
                     }
-                
-
                 }
             }
+    }
+
+            if($chave != "imagem") {
+                if ($valor != $infosProduto[$chave][$id]) {
+                    $_SESSION['produtos'][$id][$chave] = $infosProduto[$chave][$id];
+                }
+            }
+ 
 
 ?>
 
@@ -59,40 +67,39 @@
 
 
                 <p>Nome do produto</p>
-                <input type="text" name="nome" value=<?php echo $_GET['nome'] ?> class="form-control">
+                <input type="text" name="nome" value="<?php echo $_SESSION['produtos'][$id]['nome'] ?>" class="form-control">
 
                 <p>Categoria</p>
                 <p class="info-produto">
-                <select class="form-control" name="categoria">
-                    <?php 
-                    foreach ($_SESSION['categorias'] as $categoria) {
-                        if($_GET['categoria'] == $categoria) { ?>
+
+                <input list="categorias" class="form-control" name="categoria">
+                    <datalist id="categorias" name="categorias" required>
+                        <?php 
+                        if($_SESSION['produtos'][$id]['categoria'] == $categoria) { ?>
                             <option selected value="<?php $categoria ?>"><?php echo $categoria?></option>
-                        <?php
-                        } else { ?>
+                        <?php } else { ?>
                             <option value="<?php $categoria ?>"><?php echo $categoria ?></option>
-                        <?php
-                        }
-                    }
-                        ?>
-                </select>
+                        <?php } ?>
+                    </datalist>
+
+
 
                 <p>Descrição</p>
                 <p class="info-produto">
-                <textarea class="form-control" name="descricao" rows="3" required value="<?php $_GET['descricao'] ?>"><?php echo $_GET['descricao'] ?></textarea>
+                <textarea class="form-control" name="descricao" rows="3" required value="<?php $_SESSION['produtos'][$id]['descricao'] ?>"><?php echo $_SESSION['produtos'][$id]['descricao'] ?></textarea>
                 </p>
 
                 <div class="row mt-5">
                     <div class="col-6">
                             <p>Quantidade em estoque</p>
                             <p class="info-produto">
-                            <input type="number" class="form-control" name="quantidade" value="<?php echo $_GET['quantidade'] ?>">
+                            <input type="number" class="form-control" name="quantidade" value="<?php echo $_SESSION['produtos'][$id]['quantidade'] ?>">
                             </p>
                     </div>
                     <div class="col-6">
                         <p>Preço</p>
                         <p class="info-produto">
-                        <input type="number" class="form-control" name="preco" step="0.01" value="<?php echo $_GET['preco'] ?>">              
+                        <input type="number" class="form-control" name="preco" step="0.01" value="<?php echo $_SESSION['produtos'][$id]['preco'] ?>">              
                         </p>
                     </div>
                </div>
