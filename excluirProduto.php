@@ -5,12 +5,10 @@
     $id = $_GET['id'];
     //var_dump($id);
 
-        foreach ($produtos as $produto) {
-            if($produto['id']==$id) {
-                unset($produto);
-                $json = json_encode($produtos);
-                file_put_contents($listaProdutos, $json);
-                return "deu certo";
+        foreach ($_SESSION['produtos'] as $chave=>$produto) {
+            if($chave==$id) {
+                unset($_SESSION['produtos'][$chave]);
+                header('Location:index.php');
             }
         }
  

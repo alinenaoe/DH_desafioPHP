@@ -5,6 +5,7 @@
     };
 
     $id = $_GET['id'];
+    $infosProduto = $_POST;
 
     foreach($_SESSION['produtos'] as $chave=>$produto) {
         if ($id == $chave) {
@@ -13,6 +14,22 @@
             }
         }
     }
+
+    //se for enviada alguma informação nova pelo formulário que não seja a imagem:
+    if ($_POST) {
+        $id = $_GET['id'];
+        $infosProduto = $_POST;
+    
+            foreach($_SESSION['produtos'][$id] as $chave=>$valor) {
+                    if($chave != "imagem") {
+                        if ($valor != $infosProduto[$chave]) {
+                            $_SESSION['produtos'][$id][$chave] = $infosProduto[$chave];
+                        }
+                    }
+                
+
+                }
+            }
 
 ?>
 
@@ -48,8 +65,7 @@
                 <p class="info-produto">
                 <select class="form-control" name="categoria">
                     <?php 
-                    $categorias = ['Camiseta', 'Caneca', 'Boné', 'Botton'];
-                    foreach ($categorias as $categoria) {
+                    foreach ($_SESSION['categorias'] as $categoria) {
                         if($_GET['categoria'] == $categoria) { ?>
                             <option selected value="<?php $categoria ?>"><?php echo $categoria?></option>
                         <?php
