@@ -3,20 +3,11 @@
     if (!isset($_SESSION)) { 
         session_start();
     };
-    //dúvida: preciso encerrar a sessão?
 
     $id = $_GET['id'];
+    //guarda na variável produto as informações armazenadas na session relativo àquele produto específico 
+    $produto = $_SESSION["produtos"][$id];
 
-    foreach($_SESSION['produtos'] as $chave=>$produto) {
-        if ($id == $chave) {
-            $_GET['nome'] = $produto['nome'];
-            $_GET['categoria'] = $produto['categoria'];
-            $_GET['descricao'] = $produto['descricao'];
-            $_GET['quantidade'] = $produto['quantidade'];
-            $_GET['preco'] = $produto['preco'];
-            $_GET['imagem'] = $produto['imagem'];
-        }
-    };
 ?>
 
 <!DOCTYPE html>
@@ -36,33 +27,33 @@
         <div class="row mt-4">
         
             <div class="col-4">
-            <img src="<?php echo $_GET['imagem']?>">
+            <img src="<?php echo $produto['imagem']?>">
             </div>
 
             <div class="col-8">
  
-                    <h1 class="mb-4"><?php echo $_GET['nome'] ?></h1>
+                    <h1 class="mb-4"><?php echo $produto['nome'] ?></h1>
                     <p>Categoria</p>
-                    <p class="info-produto"><?php echo $_GET['categoria'] ?></p>
+                    <p class="info-produto"><?php echo $produto['categoria'] ?></p>
 
                     <p>Descrição</p>
-                    <p class="info-produto"><?php echo $_GET['descricao'] ?></p>
+                    <p class="info-produto"><?php echo $produto['descricao'] ?></p>
 
 
                <div class="row mt-5">
                     <div class="col-6">
                             <p>Quantidade em estoque</p>
-                            <p class="info-produto"><?php echo $_GET['quantidade'] ?></p>
+                            <p class="info-produto"><?php echo $produto['quantidade'] ?></p>
 
                     </div>
                     <div class="col-6">
                         <p>Preço</p>
-                        <p class="info-produto"><?php echo $_GET['preco'] ?></p>
+                        <p class="info-produto"><?php echo $produto['preco'] ?></p>
                     </div>
                </div>
 
                <div class="row mt-5">
-                    <a href="editarProduto.php?id=<?php echo $id ?>"><button class="btn btn-outline-secondary ml-3">Editar informações do produto</button></a>
+                    <a href="paginaProdutoEdicao.php?id=<?php echo $id ?>"><button class="btn btn-outline-secondary ml-3">Editar informações do produto</button></a>
                     <!-- seria interessante ter uma mensagem de alerta antes de excluir! -->
 
                     <form action="excluirProduto.php?id=<?php echo $id?>" method="POST"> 

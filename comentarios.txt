@@ -1,6 +1,0 @@
-DÚVIDAS
-- testei a função sort para deixar os itens da array de categorias de produto em ordem alfabética, mas não funcionou
-
-
-PENDÊNCIAS
--  acrescentar categorias com select dinâmico 

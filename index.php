@@ -17,7 +17,7 @@
             } else {
                 return "Produto cadastrado com sucesso!";
             };
-    
+
     
         } else {
             $_SESSION['produtos'][] = ["nome"=>$nome, "categoria"=>$categoria, "descricao"=>$descricao, "quantidade"=>$quantidade, "preco"=>$preco, "imagem"=>$imagem];        
@@ -33,10 +33,20 @@
 
     if($_POST) {
 
+
         $nomeImg = $_FILES['imagem']['name'];
         $localTmp = $_FILES['imagem']['tmp_name'];
         $caminhoSalvo = 'img/'.$nomeImg;
         $deucerto = move_uploaded_file($localTmp, $caminhoSalvo);
+
+        $produto = $_POST;
+           
+        //se o usuário escreveu o nome de uma categoria que não estava na lista, ela é inserida na array de categorias
+        if (!in_array($produto['categoria'],$_SESSION['categorias']) ) {
+            $_SESSION['categorias'][] = $produto['categoria'];
+
+        }
+
 
         echo cadastrarProduto($_POST['nome'],$_POST['categoria'], $_POST['descricao'], $_POST['quantidade'],$_POST['preco'], $caminhoSalvo);
     }
